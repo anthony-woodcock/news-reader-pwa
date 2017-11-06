@@ -1,4 +1,3 @@
-// import apiKey from '../key'
 
 class NewsController {
     constructor() {
@@ -41,7 +40,7 @@ class NewsController {
     }
 
     _updateDom(){
-        const articleElement = document.querySelector('#articles')
+        const articlesElement = document.querySelector('#articles')
         articlesElement.innerHTML = ''
 
         this._newsSections.forEach(newsSection => {
@@ -65,4 +64,10 @@ class NewsController {
             })
         })
     }
+    
 }
+
+const newsController = new NewsController()
+
+
+
