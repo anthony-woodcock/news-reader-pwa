@@ -1,0 +1,62 @@
+html {
+    font-size: 62.5%;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f6f6f6;
+    color: #333;
+    font-size: 1.4rem;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  header {
+    background-color: #fff;
+    padding: 1.6rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  header > h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  
+  .section-heading {
+    background-color: #005689;
+  }
+  
+  .section-heading > h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: white;
+    padding: 0.5rem 1.6rem;
+    text-transform: uppercase;
+  }
+  
+  .article {
+    text-decoration: none;
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .article > .thumbnail {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    display: block;
+  }
+  
+  .article > .title {
+    padding: 1.6rem 2rem;
+    text-decoration: underline;
+    text-decoration-color: #005689;
+    background-color: white;
+  }
+  
+  .article > .title > h3 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
