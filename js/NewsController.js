@@ -1,9 +1,11 @@
 
 class NewsController {
-    constructor() {
+    constructor () {
         this._newsSections = []
-
+        this._db = this._initDb()
+        
         this._registerServiceWorker()
+        this._getArticlesFromDb()
         this._getArticles()
     }
 
@@ -26,10 +28,12 @@ class NewsController {
             throw new Error(`Couldn't connect to server.`)
         })
         .then(responseJson => {
-            this._categoriseNews(responseJson.response.results)
-            this._updateDom()
+            const articles = responseJson.response.results
+      
+            this._cacheArticles(articles)
+            this._getArticlesFromDb()
         })
-        .catch(error => console.log(error))
+        .catch(error => console.error(error))
     }
 
     _categoriseNews (articles) {
@@ -72,6 +76,65 @@ class NewsController {
                 </a>
                 `
             })
+        })
+    }
+
+    _initDb () {
+        return new Promise(resolve => {
+            const dbOpen = indexedDB.open('test-db', 1)
+        
+            dbOpen.onupgradeneeded = () => {
+                const database = dbOpen.result
+      
+                const articleStore = database.createObjectStore('articles', { keyPath: 'id' })
+                articleStore.createIndex('by_id', 'id', { unique: true })
+            }
+            dbOpen.onsuccess = () => {
+                const database = dbOpen.result
+      
+                resolve(database)
+            }
+        })
+    }
+
+    _cacheArticles (articles) {
+        this._db
+            .then(database => {
+                const articlesStore = database.transaction('articles', 'readwrite').objectStore('articles')
+      
+                articles.forEach(article => articlesStore.put(article))
+        })
+    }
+
+    _getArticlesFromDb () {
+        this._db
+            .then(database => {
+                const articlesStore = database.transaction('articles').objectStore('articles')
+                const articlesQuery = articlesStore.index('by_id').getAll()
+      
+                articlesQuery.onsuccess = () => {
+                    this._categoriseNews(articlesQuery.result)
+                    this._updateDom()
+            }
+        })
+    }
+
+    _categoriseNews (articles) {
+        this._newsSections = []
+        
+        articles.forEach(article => {
+            const existingNewsSection = this._newsSections.find(newsSection => {
+                return newsSection.title === article.sectionName
+            })
+      
+            if (existingNewsSection) {
+                existingNewsSection.articles.push(article)
+            } else {
+            this._newsSections.push({
+                    title: article.sectionName,
+                    articles: [article]
+                })
+            }
         })
     }
     
